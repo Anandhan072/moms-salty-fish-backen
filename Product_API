@@ -1,0 +1,83 @@
+BaseURL:
+http://localhost:3000/api/items
+
+
+
+1. Create Item
+
+POST /api/items
+
+Body (JSON):
+{
+  "name": "Dry Fish",
+  "description": "Premium quality dry fish",
+  "category": "Seafood",
+  "stockWeight": 10000,
+  "stockUnit": "g",
+  "photos": [
+    "https://example.com/fish1.jpg",
+    "https://example.com/fish2.jpg"
+  ],
+  "variants": [
+    {
+      "title": "100g Pack",
+      "weight": { "value": 100, "unit": "g" },
+      "price": 40,
+      "sku": "DF100"
+    },
+    {
+      "title": "250g Pack",
+      "weight": { "value": 250, "unit": "g" },
+      "price": 90,
+      "sku": "DF250"
+    }
+  ]
+}
+
+2. Get All Items
+GET /api/itemsg
+
+
+3. Get One Item
+GET /api/items/:id
+
+GET http://localhost:3000/api/items/66f42b8c34f123abc456def7
+
+
+4. Update Item
+
+PUT /api/items/:id
+Body (JSON):
+{
+  "description": "Updated description",
+  "stockWeight": 8000
+}
+
+
+
+5. Delete Item
+
+DELETE /api/items/:id
+
+
+
+
+6. Add Stock
+
+POST /api/items/:id/add-stock
+
+Body (JSON):
+{ "weight": 2000 }
+
+
+
+
+
+7. Reduce Stock (by Variant)
+
+POST /api/items/:id/reduce-stock
+
+Body (JSON):{ "variant": "DF250", "qty": 2 }
+
+
+8.

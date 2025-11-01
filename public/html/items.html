@@ -1,0 +1,90 @@
+<div id="items_main">
+  <div id="items_filter">
+    <div id="filter_container">
+      <span>
+        <select name="Filter" id="filter_option">
+          <option value="">All Item</option>
+          <option value="">No Stock</option>
+          <option value="">Salty Fish</option>
+          <option value="">No Salty Fish</option>
+          <option value="">Need Refile</option>
+        </select>
+      </span>
+      <span></span>
+    </div>
+    <div id="filter_View_add">
+      <div id="items_view">
+        <span
+          ><button>
+            <svg class="icon" width="18" height="14">
+              <use href="${icon}#icon-list-view"></use>
+            </svg>
+          </button>
+        </span>
+        <span>
+          <button>
+            <svg class="icon" width="18" height="14">
+              <use href="${icon}#icon-grid-view"></use>
+            </svg>
+          </button>
+        </span>
+      </div>
+      <div id="add_items">
+        <button id="add_items_btn" data-items="additems">
+          <span>+ &ensp;</span>
+          <span>New</span>
+        </button>
+      </div>
+      <div id="filter_more">
+        <button>
+          <svg class="icon" width="18" height="4">
+            <use href="${icon}#icon-more-option"></use>
+          </svg>
+        </button>
+        <div id="filter_more_option"></div>
+      </div>
+    </div>
+  </div>
+  <div id="item_list">
+    <div id="item_header">
+      <table id="item_table" style="border: none">
+        <thead id="item_header_section">
+          <tr id="item_header_row_Section">
+            <th id="table_th_filter">
+              <span>
+                <button>
+                  <svg class="icon" width="15" height="15">
+                    <use href="${icon}#icon-filter-table"></use>
+                  </svg>
+                </button>
+              </span>
+              <span>
+                <button>
+                  <svg class="icon" width="15" height="15">
+                    <use href="${icon}#icon-box"></use>
+                  </svg>
+                </button>
+              </span>
+            </th>
+            <th>NAME</th>
+            <th>SUK</th>
+            <th>STOCK ON HAND</th>
+            <th>REORDER LEVEL</th>
+            <th id="table_search">
+              <button>
+                <svg class="icon" width="15" height="15">
+                  <use href="${icon}#icon-search"></use>
+                </svg>
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="all_items_body">
+          <tr>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

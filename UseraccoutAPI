@@ -1,0 +1,441 @@
+1, SignUp
+
+curl -X POST http://localhost:3000/api/v1/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Alice","email":"alice@example.com","password":"pass1234","passwordConfirm":"pass1234"}' \
+  -c cookies.txt
+
+
+2. Login 
+
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"alice@example.com","password":"pass1234"}' \
+  -c cookies.txt
+
+
+
+3. Forget password
+
+curl -X POST http://localhost:3000/api/v1/auth/forgotPassword \
+  -H "Content-Type: application/json" \
+  -d '{"email":"alice@example.com"}'
+
+
+4. Reset password
+ 
+ curl -X PATCH http://localhost:3000/api/v1/auth/resetPassword/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"password":"newpass123","passwordConfirm":"newpass123"}' -c cookies.txt
+
+
+5. Refresh Token 
+
+curl -X POST http://localhost:3000/api/v1/auth/refresh-token \
+  -b cookies.txt -c cookies.txt
+
+
+6. LogOut 
+
+curl -X POST http://localhost:3000/api/v1/auth/logout \
+  -b cookies.txt
+
+
+7. get User 
+
+curl http://localhost:3000/api/v1/auth/me -b cookies.txt
+
+or 
+
+curl -H "Authorization: Bearer <ACCESS_TOKEN>" http://localhost:3000/api/v1/auth/me
+
+
+8. Admin-only example
+
+GET /api/v1/auth/admin-only
+
+
+
+
+
+///////
+
+
+MOBILE API
+
+
+1. Request OTP
+
+URL: POST /api/v1/auth/request-otp
+
+Body (JSON):
+
+{
+  "phoneNumber": "9876543210"
+}
+
+
+2. Verify OTP (Login)
+
+URL: POST /api/v1/auth/verify-otp
+
+Body (JSON):
+
+{
+  "phoneNumber": "9876543210",
+  "otp": "123456"
+}
+
+
+3. Protected Route Example
+
+URL: GET /api/v1/user/profile
+
+Headers:
+
+Authorization: Bearer <ACCESS_TOKEN>
+
+
+Middleware: protect ensures only logged-in users can access.
+
+
+
+
+4. Logout
+
+URL: POST /api/v1/auth/logout
+
+Headers: optional cookies (will be cleared)
+
+Response:
+
+{
+  "status": "success",
+  "message": "Logged out"
+}
+
+
+2. Refresh Access Token
+
+URL: GET /api/v1/auth/refresh-token
+
+Headers:
+
+Cookies must include refreshToken
+
+
+
+
+
+/////////////////////////////////////////////////////
+ "STINGRAY | THIRUKAI | DRY FISH | (CLEANED) "
+
+{
+  "name": "STINGRAY | THIRUKAI | DRY FISH | (CLEANED) ",
+  "description": "Premium quality dry fish",
+  "category": "Light Salted",
+  "stockWeight": 5000,
+  "stockUnit": "g",
+  "photos": [
+    "https://drive.google.com/file/d/14Xr6NrVCn4zVlab3h3PwHfM-9m2d_2Ys/view?usp=drive_link",
+    "https://drive.google.com/file/d/1ppvQceYvv5g9dpWOkzp5v7l2fWpOpgz4/view?usp=drive_link",
+    "https://drive.google.com/file/d/1NIIw-mlUvwr_P-9qz6cnk4t2l6ELGxZq/view?usp=drive_link",
+    "https://drive.google.com/file/d/1W0pSQItpmdR7WZT8aio6iDtpcy2mrWqt/view?usp=drive_link"
+    
+  ],
+  "variants": [
+  
+    {
+      "title": "250g Pack",
+      "weight": { "value": 250, "unit": "g" },
+      "price": 350,
+      "MRP": 450,
+      "sku": "SDC250"
+    },
+    {
+      "title": "500g Pack",
+      "weight": { "value": 500, "unit": "g" },
+      "price": 700,
+      "MRP": 900,
+      "sku": "SDC500"
+    },
+     {
+      "title": "1000 Pack",
+      "weight": { "value": 1000, "unit": "g" },
+      "price": 1400,
+       "MRP": 1800,
+      "sku": "SDC1000"
+    }
+  ]
+  
+}
+
+
+
+/////////////////////////////////////////
+RIBBON
+
+{
+  "name": "RIBBON | VAALAI | DRY FISH | KARUVADU (CLEANED) ",
+
+  "description": "Premium quality dry fish",
+  "category": "Light Salted",
+  "stockWeight": 5000,
+  "stockUnit": "g",
+  "photos": [
+    "https://drive.google.com/file/d/14Xr6NrVCn4zVlab3h3PwHfM-9m2d_2Ys/view?usp=drive_link",
+    "https://drive.google.com/file/d/1ppvQceYvv5g9dpWOkzp5v7l2fWpOpgz4/view?usp=drive_link",
+    "https://drive.google.com/file/d/1cAegqcQS6SDJk26VrML8ypSZlHnnjiUe/view?usp=drive_link",
+    "https://drive.google.com/file/d/1NIIw-mlUvwr_P-9qz6cnk4t2l6ELGxZq/view?usp=drive_link"
+    
+  ],
+  "variants": [
+  
+    {
+      "title": "250g Pack",
+      "weight": { "value": 250, "unit": "g" },
+      "price": 250,
+      "MRP": 300,
+      "sku": "VDC250"
+    },
+    {
+      "title": "500g Pack",
+      "weight": { "value": 500, "unit": "g" },
+      "price": 400,
+      "MRP": 600,
+      "sku": "VDC500"
+    },
+     {
+      "title": "1000 Pack",
+      "weight": { "value": 1000, "unit": "g" },
+      "price": 800,
+       "MRP": 1200,
+      "sku": "VDC1000"
+    }
+  ]
+}
+
+
+{
+  "name": "RIBBON | VAALAI | DRY FISH | KARUVADU  ",
+
+  "description": "Premium quality dry fish",
+  "category": "Light Salted",
+  "stockWeight": 5000,
+  "stockUnit": "g",
+  "photos": [
+    "https://drive.google.com/file/d/1AHtYqCmf7sruaqJxaYGHDoQjXaLaoOly/view?usp=drive_link",
+    "https://drive.google.com/file/d/1DC_q-UvAl9Wt9B_eszWI0Iid1Q7rGKNU/view?usp=drive_link",
+    "https://drive.google.com/file/d/1cAegqcQS6SDJk26VrML8ypSZlHnnjiUe/view?usp=drive_link",
+    "https://drive.google.com/file/d/1_JL72vvCqyFcDQQCoQfWgdnHKQXL8Hf_/view?usp=drive_link"
+    
+  ],
+  "variants": [
+  
+    {
+      "title": "250g Pack",
+      "weight": { "value": 250, "unit": "g" },
+      "price": 150,
+      "MRP": 200,
+      "sku": "VD250"
+    },
+    {
+      "title": "500g Pack",
+      "weight": { "value": 500, "unit": "g" },
+      "price": 300,
+      "MRP": 400,
+      "sku": "VD500"
+    },
+     {
+      "title": "1000 Pack",
+      "weight": { "value": 1000, "unit": "g" },
+      "price": 550,
+       "MRP": 800,
+      "sku": "VD1000"
+    }
+  ]
+}
+
+
+////////////////////////////////////////
+Nethili
+
+
+{
+  "name": "Anchovy | NETHILI | DRY FISH | KARUVADU  ",
+
+  "description": "Premium quality dry fish",
+  "category": "No Salted",
+  "stockWeight": 5000,
+  "stockUnit": "g",
+  "photos": [
+    "https://drive.google.com/file/d/1AHtYqCmf7sruaqJxaYGHDoQjXaLaoOly/view?usp=drive_link",
+    "https://drive.google.com/file/d/1DC_q-UvAl9Wt9B_eszWI0Iid1Q7rGKNU/view?usp=drive_link",
+    "https://drive.google.com/file/d/1cAegqcQS6SDJk26VrML8ypSZlHnnjiUe/view?usp=drive_link",
+    "https://drive.google.com/file/d/1_JL72vvCqyFcDQQCoQfWgdnHKQXL8Hf_/view?usp=drive_link"
+    
+  ],
+  "variants": [
+  
+    {
+      "title": "250g Pack",
+      "weight": { "value": 250, "unit": "g" },
+      "price": 200,
+      "MRP": 250,
+      "sku": "ND250"
+    },
+    {
+      "title": "500g Pack",
+      "weight": { "value": 500, "unit": "g" },
+      "price": 350,
+      "MRP": 500,
+      "sku": "ND500"
+    },
+     {
+      "title": "1000 Pack",
+      "weight": { "value": 1000, "unit": "g" },
+      "price": 100,
+       "MRP": 100,
+      "sku": "ND1000"
+    }
+  ]
+}
+
+
+{
+  "name": "Anchovy | NETHILI | DRY FISH | KARUVADU | (CLEANED)",
+
+  "description": "Premium quality dry fish",
+  "category": "No Salted",
+  "stockWeight": 5000,
+  "stockUnit": "g",
+  "photos": [
+    "https://drive.google.com/file/d/1AHtYqCmf7sruaqJxaYGHDoQjXaLaoOly/view?usp=drive_link",
+    "https://drive.google.com/file/d/1DC_q-UvAl9Wt9B_eszWI0Iid1Q7rGKNU/view?usp=drive_link",
+    "https://drive.google.com/file/d/1cAegqcQS6SDJk26VrML8ypSZlHnnjiUe/view?usp=drive_link",
+    "https://drive.google.com/file/d/1_JL72vvCqyFcDQQCoQfWgdnHKQXL8Hf_/view?usp=drive_link"
+    
+  ],
+  "variants": [
+  
+    {
+      "title": "250g Pack",
+      "weight": { "value": 250, "unit": "g" },
+      "price": 300,
+      "MRP": 400,
+      "sku": "NDC250"
+    },
+    {
+      "title": "500g Pack",
+      "weight": { "value": 500, "unit": "g" },
+      "price": 600,
+      "MRP": 800,
+      "sku": "NDC500"
+    },
+     {
+      "title": "1000 Pack",
+      "weight": { "value": 1000, "unit": "g" },
+      "price": 1100,
+       "MRP": 1600,
+      "sku": "NDC1000"
+    }
+  ]
+}
+
+
+
+
+////////////////////////////////////////
+SQUID 
+
+{
+  "name": "SQUID | KANAVA | DRY FISH | KARUVADU | (CLEANED)",
+
+  "description": "Premium quality dry fish",
+  "category": "No Salted",
+  "stockWeight": 5000,
+  "stockUnit": "g",
+  "photos": [
+    "https://drive.google.com/file/d/1AHtYqCmf7sruaqJxaYGHDoQjXaLaoOly/view?usp=drive_link",
+    "https://drive.google.com/file/d/1DC_q-UvAl9Wt9B_eszWI0Iid1Q7rGKNU/view?usp=drive_link",
+    "https://drive.google.com/file/d/1cAegqcQS6SDJk26VrML8ypSZlHnnjiUe/view?usp=drive_link",
+    "https://drive.google.com/file/d/1_JL72vvCqyFcDQQCoQfWgdnHKQXL8Hf_/view?usp=drive_link"
+    
+  ],
+  "variants": [
+   {
+      "title": "100g Pack",
+      "weight": { "value": 100, "unit": "g" },
+      "price": 200,
+      "MRP": 300,
+      "sku": "SDC250"
+    },
+    {
+      "title": "250g Pack",
+      "weight": { "value": 250, "unit": "g" },
+      "price": 400,
+      "MRP": 600,
+      "sku": "SDC500"
+    },
+    {
+      "title": "500g Pack",
+      "weight": { "value": 500, "unit": "g" },
+      "price": 800,
+      "MRP": 1200,
+      "sku": "SDC500"
+    },
+     {
+      "title": "1000 Pack",
+      "weight": { "value": 1000, "unit": "g" },
+      "price": 1600,
+       "MRP": 2400,
+      "sku": "SDC1000"
+    }
+  ]
+}
+
+
+
+
+////////////////////////////////////////
+KING FISH 
+
+{
+  "name": "KING FISH | VANJIRAM | DRY FISH | KARUVADU | (CLEANED)",
+
+  "description": "Premium quality dry fish",
+  "category": "No Salted",
+  "stockWeight": 5000,
+  "stockUnit": "g",
+  "photos": [
+    "https://drive.google.com/file/d/1AHtYqCmf7sruaqJxaYGHDoQjXaLaoOly/view?usp=drive_link",
+    "https://drive.google.com/file/d/1DC_q-UvAl9Wt9B_eszWI0Iid1Q7rGKNU/view?usp=drive_link",
+    "https://drive.google.com/file/d/1cAegqcQS6SDJk26VrML8ypSZlHnnjiUe/view?usp=drive_link",
+    "https://drive.google.com/file/d/1_JL72vvCqyFcDQQCoQfWgdnHKQXL8Hf_/view?usp=drive_link"
+    
+  ],
+
+  "variants": [
+    {
+      "title": "250g Pack",
+      "weight": { "value": 250, "unit": "g" },
+      "price": 400,
+      "MRP": 500,
+      "sku": "VDC250"
+    },
+    {
+      "title": "500g Pack",
+      "weight": { "value": 500, "unit": "g" },
+      "price": 800,
+      "MRP": 1000,
+      "sku": "NDC500"
+    },
+     {
+      "title": "1000 Pack",
+      "weight": { "value": 1000, "unit": "g" },
+      "price": 1600,
+       "MRP": 2000,
+      "sku": "NDC1000"
+    }
+  ]
+}
