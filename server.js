@@ -14,6 +14,7 @@ mongoose
   })
   .then((con) => {
     console.log("DB connected!");
+    console.log("kmlnl");
   })
   .catch((err) => {
     console.error("DB connection error:", err);
