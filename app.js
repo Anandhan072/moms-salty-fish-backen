@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://momssaltyfish.com/",
+    origin: "https://momssaltyfish.com",
     credentials: true,
   })
 );
