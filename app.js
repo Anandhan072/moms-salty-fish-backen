@@ -18,8 +18,6 @@ app.use(
   cors({
     origin: "https://momssaltyfish.com/",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "device-id"],
   })
 );
 // app.options("*", cors({ origin: "http://localhost:5173", credentials: true }));
