@@ -88,7 +88,7 @@ exports.requestOtp = catchAsync(async (req, res, next) => {
 ================================================================= */
 exports.verifyOtp = catchAsync(async (req, res, next) => {
   const { email, otp, deviceId } = req.body;
-  console.log(email, otp, deviceId);
+
   if (!email || !otp || !deviceId)
     return next(new AppError("Email, OTP, and device ID required", 400));
 
@@ -111,8 +111,6 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
     (req.headers.authorization?.startsWith("Bearer") && req.headers.authorization.split(" ")[1]);
 
   const deviceId = req.headers["device-id"];
-
-  console.log(deviceId);
 
   if (!rawToken || !deviceId)
     return next(new AppError("Refresh token and device ID required", 401));
@@ -164,7 +162,6 @@ exports.logout = catchAsync(async (req, res, next) => {
    🧱 Protect Middleware (JWT Validation)
 ================================================================= */
 exports.protect = catchAsync(async (req, res, next) => {
-  console.log(req.headers);
   let token =
     req.headers.authorization?.startsWith("Bearer") && req.headers.authorization.split(" ")[1];
   if (!token && req.cookies?.jwt) token = req.cookies.jwt;
@@ -172,9 +169,9 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded);
+
     const user = await User.findById(decoded.id);
-    console.log(user);
+
     req.user = user;
     next();
   } catch (err) {

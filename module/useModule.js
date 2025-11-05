@@ -5,12 +5,15 @@ const validator = require("validator");
 /* =====================================================
    📦 Item Reference Schema (for cart, favorites, orders)
 ===================================================== */
-const itemReferenceSchema = new mongoose.Schema({
-  itemId: { type: mongoose.Schema.Types.ObjectId, ref: "Item", required: true },
-  variantId: { type: mongoose.Schema.Types.ObjectId },
-  quantity: { type: Number, default: 1, min: 1 },
-  addedAt: { type: Date, default: Date.now },
-});
+const itemReferenceSchema = new mongoose.Schema(
+  {
+    itemId: { type: mongoose.Schema.Types.ObjectId, ref: "Item", required: true },
+    variantId: { type: mongoose.Schema.Types.ObjectId },
+    quantity: { type: Number, default: 1, min: 1 },
+    addedAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
 
 /* =====================================================
    🔑 Token Schema Base (for access + refresh)
@@ -25,59 +28,65 @@ const refreshTokenSchema = new mongoose.Schema({
 /* =====================================================
    🛍 User Product Info Schema
 ===================================================== */
-const userProductInfoSchema = new mongoose.Schema({
-  favorites: { type: [itemReferenceSchema], default: [] },
-  cart: { type: [itemReferenceSchema], default: [] },
-  orders: {
-    type: [
-      {
-        items: { type: [itemReferenceSchema], required: true },
-        orderDate: { type: Date, default: Date.now },
-        status: {
-          type: String,
-          enum: [
-            "pending",
-            "accepted",
-            "preparing",
-            "waiting-for-shipment",
-            "shipped",
-            "delivered",
-            "awaiting-review",
-            "cancelled",
-          ],
-          default: "pending",
+const userProductInfoSchema = new mongoose.Schema(
+  {
+    favorites: { type: [itemReferenceSchema], default: [] },
+    cart: { type: [itemReferenceSchema], default: [] },
+    orders: {
+      type: [
+        {
+          items: { type: [itemReferenceSchema], required: true },
+          orderDate: { type: Date, default: Date.now },
+          status: {
+            type: String,
+            enum: [
+              "pending",
+              "accepted",
+              "preparing",
+              "waiting-for-shipment",
+              "shipped",
+              "delivered",
+              "awaiting-review",
+              "cancelled",
+            ],
+            default: "pending",
+          },
+          totalAmount: { type: Number, default: 0, min: 0 },
         },
-        totalAmount: { type: Number, default: 0, min: 0 },
-      },
-    ],
-    default: [],
+      ],
+      default: [],
+    },
   },
-});
+  { _id: false }
+);
 
 /* =====================================================
    🏠 Address Schema
 ===================================================== */
-const addressSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ["Home", "Office", "Others"],
-    default: "Home",
-  },
-  phone: {
-    type: String,
-    trim: true,
-    validate: {
-      validator: (v) => !v || validator.isMobilePhone(v, "any"),
-      message: "Invalid phone number",
+const addressSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      enum: ["Home", "Office", "Others"],
+      default: "Home",
     },
+    phone: {
+      type: String,
+      trim: true,
+      validate: {
+        validator: (v) => !v || validator.isMobilePhone(v, "any"),
+        message: "Invalid phone number",
+      },
+    },
+    street: { type: String, trim: true },
+    addressLine: { type: String, trim: true },
+    city: { type: String, trim: true },
+    state: { type: String, trim: true },
+    pincode: { type: String, trim: true },
+    country: { type: String, default: "India" },
   },
-  street: { type: String, trim: true },
-  addressLine: { type: String, trim: true },
-  city: { type: String, trim: true },
-  state: { type: String, trim: true },
-  pincode: { type: String, trim: true },
-  country: { type: String, default: "India" },
-});
+  { _id: false }
+);
 
 /* =====================================================
    👤 User Schema
@@ -194,6 +203,11 @@ userSchema.methods.removeExpiredTokens = async function () {
 // Revoke token for a specific device
 userSchema.methods.revokeAccessToken = async function (deviceId) {
   this.refreshTokens = this.refreshTokens.filter((r) => r.deviceId !== deviceId);
+  return this.save({ validateBeforeSave: false });
+};
+
+userSchema.method.addCartItems = async function (itemCart) {
+  this.cart = [itemCart];
   return this.save({ validateBeforeSave: false });
 };
 

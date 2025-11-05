@@ -11,9 +11,8 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
+  const users = await User.find({ _id: req.body.itemId });
 
-  // SEND RESPONSE
   res.status(200).json({
     status: "success",
     results: users.length,
@@ -35,6 +34,45 @@ exports.getMe = catchAsync(async (req, res, next) => {
     data: {
       user: safeUser,
     },
+  });
+});
+
+// ✅ controllers/userController.js
+
+exports.updateCart = catchAsync(async (req, res, next) => {
+  if (!req.user) return next(new AppError("No authenticated user. Please sign in first.", 401));
+
+  const { itemId, variantId, quantity } = req.body;
+
+  if (!itemId || !variantId || !quantity)
+    return next(new AppError("Missing required fields (itemId, variantId, quantity)", 400));
+
+  console.log(itemId, variantId, quantity);
+
+  // 🛒 Find and update the user's cart
+  const user = await User.findById(req.user.id);
+  if (!user) return next(new AppError("User not found", 404));
+
+  console.log(user);
+  // 🧩 Check if item already exists in cart
+  const existingItem = user.userProductInfo.cart.find(
+    (item) => item.itemId.toString() === itemId && item.variantId.toString() === variantId
+  );
+
+  if (existingItem) {
+    // Update quantity
+    existingItem.quantity = quantity;
+  } else {
+    // Add new item
+    user.userProductInfo.cart.push({ itemId, variantId, quantity });
+  }
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: "success",
+    message: "Cart updated successfully",
+    data: { cart: user.userProductInfo.cart },
   });
 });
 
