@@ -5,7 +5,7 @@ const authController = require("../controllers/authController.js");
 
 // CRUD
 router.post(
-  "/",
+  "/add-new-item",
   authController.protect,
   authController.restrictTo("admin"),
   itemController.createItem

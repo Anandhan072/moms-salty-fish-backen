@@ -6,7 +6,7 @@ const offerController = require("../controllers/offerController.js");
 const router = express.Router();
 
 router.post(
-  "/",
+  "/add-new-offer",
   authController.protect,
   authController.restrictTo("admin"),
   offerController.createOffer

@@ -72,7 +72,7 @@ const DescriptionSchema = new Schema(
     header: { type: String, trim: true },
     content: { type: String, trim: true },
   },
-  { _id: true, timestamps: true }
+  { _id: false, timestamps: true }
 );
 
 /* =====================================================

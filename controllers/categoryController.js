@@ -7,7 +7,7 @@ exports.addCategory = catchAsync(async (req, res, next) => {
 
   const categoryAdd = await category.create(body);
 
-  res.status(201).json({
+  return res.status(201).json({
     status: "Successfully",
     data: categoryAdd,
   });
@@ -18,14 +18,14 @@ exports.getAllCategory = catchAsync(async (req, res, next) => {
   console.log(test);
   if (test) {
     const categoryAll = await category.find({ url: test });
-    res.status(201).json({
+    return res.status(201).json({
       status: "Successfully",
       data: categoryAll,
     });
   }
 
   const categoryAll = await category.find({});
-  res.status(201).json({
+ return res.status(201).json({
     status: "Successfully",
     data: categoryAll,
   });
@@ -41,7 +41,7 @@ exports.getCategory = catchAsync(async (req, res, next) => {
     return res.status(404).json({ status: "fail", message: "Category not found" });
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     status: "success",
     data: categoryAll,
   });

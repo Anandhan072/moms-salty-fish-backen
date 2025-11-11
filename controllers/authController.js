@@ -106,6 +106,7 @@ exports.verifyOtp = catchAsync(async (req, res, next) => {
    ♻️ Refresh Access Token
 ================================================================= */
 exports.refreshToken = catchAsync(async (req, res, next) => {
+  console.log("Refreshing token...");
   const rawToken =
     req.cookies?.refreshToken ||
     (req.headers.authorization?.startsWith("Bearer") && req.headers.authorization.split(" ")[1]);
@@ -144,18 +145,36 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
 ================================================================= */
 exports.logout = catchAsync(async (req, res, next) => {
   const deviceId = req.body.deviceId || req.headers["x-device-id"];
-  if (!deviceId) return next(new AppError("Device ID required", 400));
+  const email = req.body.email;
 
-  const user = await User.findById(req.user?._id);
+  // 1️⃣ Validate input
+  if (!email) return next(new AppError("Email is required", 400));
+  if (!deviceId) return next(new AppError("Device ID is required", 400));
+
+  // 2️⃣ Find user by email
+  const user = await User.findOne({ email }).select("+refreshTokens");
   if (!user) return next(new AppError("User not found", 404));
 
-  user.refreshTokens = user.refreshTokens.filter((rt) => rt.deviceId !== deviceId);
+
+  // 3️⃣ Safely filter out the refresh token for this device
+  if (Array.isArray(user.refreshTokens)) {
+    user.refreshTokens = user.refreshTokens.filter(
+      (rt) => rt.deviceId !== deviceId
+    );
+  }
+
+  // 4️⃣ Save changes without triggering validation
   await user.save({ validateBeforeSave: false });
 
-  res.clearCookie("jwt");
-  res.clearCookie("refreshToken");
+  // 5️⃣ Clear cookies (if using cookie-based auth)
+  res.clearCookie("jwt", { httpOnly: true, sameSite: "strict" });
+  res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
 
-  res.status(200).json({ status: "success", message: "Logged out successfully" });
+  // 6️⃣ Respond success
+  res.status(200).json({
+    status: "success",
+    message: "Logged out successfully",
+  });
 });
 
 /* ================================================================

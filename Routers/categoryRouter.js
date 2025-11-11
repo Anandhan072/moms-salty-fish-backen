@@ -4,7 +4,7 @@ const categoryController = require("../controllers/categoryController.js");
 const authController = require("../controllers/authController.js");
 
 router.post(
-  "/",
+  "/add-new-category",
   authController.protect,
   authController.restrictTo("admin"),
   categoryController.addCategory
