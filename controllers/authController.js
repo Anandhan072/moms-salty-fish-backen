@@ -139,39 +139,32 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
     expiresIn: ACCESS_TOKEN_EXPIRY_MINUTES * 60 * 1000,
   });
 });
-
 /* ================================================================
    🚪 Logout (Per Device)
 ================================================================= */
 exports.logout = catchAsync(async (req, res, next) => {
-  const deviceId = req.body.deviceId || req.headers["x-device-id"];
-  const email = req.body.email;
+  const user = req.user;
+  const deviceId = req.deviceId;
 
-  // 1️⃣ Validate input
-  if (!email) return next(new AppError("Email is required", 400));
-  if (!deviceId) return next(new AppError("Device ID is required", 400));
+  const checkIsUserActive = Array.isArray(user.refreshTokens)
+    ? user.refreshTokens.filter(rt => rt.deviceId === deviceId)
+    : [];
 
-  // 2️⃣ Find user by email
-  const user = await User.findOne({ email }).select("+refreshTokens");
-  if (!user) return next(new AppError("User not found", 404));
-
-
-  // 3️⃣ Safely filter out the refresh token for this device
-  if (Array.isArray(user.refreshTokens)) {
-    user.refreshTokens = user.refreshTokens.filter(
-      (rt) => rt.deviceId !== deviceId
-    );
+  if (checkIsUserActive.length === 0) {
+    return next(new AppError("User not logged in on this device", 400));
   }
 
-  // 4️⃣ Save changes without triggering validation
-  await user.save({ validateBeforeSave: false });
+  const initialTokenCount = user.refreshTokens.length;
+  user.refreshTokens = user.refreshTokens.filter(rt => rt.deviceId !== deviceId);
 
-  // 5️⃣ Clear cookies (if using cookie-based auth)
+  if (user.refreshTokens.length !== initialTokenCount) {
+    await user.save({ validateBeforeSave: false });
+  }
+
   res.clearCookie("jwt", { httpOnly: true, sameSite: "strict" });
   res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
 
-  // 6️⃣ Respond success
-  res.status(200).json({
+  return res.status(200).json({
     status: "success",
     message: "Logged out successfully",
   });
@@ -182,21 +175,31 @@ exports.logout = catchAsync(async (req, res, next) => {
 ================================================================= */
 exports.protect = catchAsync(async (req, res, next) => {
   let token =
-    req.headers.authorization?.startsWith("Bearer") && req.headers.authorization.split(" ")[1];
+    req.headers.authorization?.startsWith("Bearer") &&
+    req.headers.authorization.split(" ")[1];
+
+  const deviceId = req.headers["device-id"] || req.headers["x-device-id"];
   if (!token && req.cookies?.jwt) token = req.cookies.jwt;
+
   if (!token) return next(new AppError("Not logged in", 401));
+  if (!deviceId) return next(new AppError("Device ID is required", 400));
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
     const user = await User.findById(decoded.id);
+    if (!user) return next(new AppError("User not found", 404));
 
     req.user = user;
+    req.deviceId = deviceId;
     next();
   } catch (err) {
-    return next(new AppError("Token expired or invalid", 401));
+    if (err.name === "TokenExpiredError") {
+      return next(new AppError("Session expired. Please login again.", 401));
+    }
+    return next(new AppError("Invalid token", 401));
   }
 });
+
 
 /* ================================================================
    👤 Get Current User

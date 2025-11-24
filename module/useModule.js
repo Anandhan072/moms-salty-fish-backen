@@ -10,6 +10,7 @@ const itemReferenceSchema = new mongoose.Schema(
     itemId: { type: mongoose.Schema.Types.ObjectId, ref: "Item", required: true },
     variantId: { type: mongoose.Schema.Types.ObjectId },
     quantity: { type: Number, default: 1, min: 1 },
+    weight: { type: Number, default: 0 }, // in grams
     addedAt: { type: Date, default: Date.now },
   },
   { _id: false }
