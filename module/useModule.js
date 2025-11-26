@@ -13,7 +13,6 @@ const itemReferenceSchema = new mongoose.Schema(
     weight: { type: Number, default: 0 }, // in grams
     addedAt: { type: Date, default: Date.now },
   },
-  { _id: false }
 );
 
 /* =====================================================
