@@ -178,6 +178,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization?.startsWith("Bearer") &&
     req.headers.authorization.split(" ")[1];
 
+
+  console.log('kjbijbihbiu')
+
   const deviceId = req.headers["device-id"] || req.headers["x-device-id"];
   if (!token && req.cookies?.jwt) token = req.cookies.jwt;
 

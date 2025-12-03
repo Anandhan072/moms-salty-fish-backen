@@ -25,6 +25,7 @@
     "morgan": "^1.10.1",
     "nodemailer": "^7.0.6",
     "promisify": "^0.0.3",
+    "razorpay": "^2.9.6",
     "slugify": "^1.6.6",
     "util": "^0.12.5",
     "validator": "^13.15.15"
