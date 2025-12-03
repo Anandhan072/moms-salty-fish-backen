@@ -19,7 +19,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://momssaltyfish.com"],
+    origin: ["https://momssaltyfish.com", "http://localhost:5173"],
     credentials: true,
   })
 );
