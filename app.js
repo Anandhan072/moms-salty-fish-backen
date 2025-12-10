@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 const morgan = require("morgan");
 
 
+
+const AppError = require('./utils/appError');
+const globalErrorController = require('./controllers/errorController')
 const htmlRouter = require("./Routers/htmlRouters");
 const itemsRouter = require("./Routers/itemRouters");
 const authRouter = require("./Routers/authRouters");
@@ -15,11 +18,13 @@ const bannerRouter = require("./Routers/bannerRouter");
 const categoryRouter = require("./Routers/categoryRouter");
 
 
+
+
 const app = express();
 
 app.use(
   cors({
-    origin: ["https://momssaltyfish.com", "http://localhost:5173"],
+    origin: "https://momssaltyfish.com",
     credentials: true,
   })
 );
@@ -38,6 +43,8 @@ if (process.env.NODE_ENV === "production") {
 app.use(express.json());
 app.use(cookieParser());
 
+
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/v1/html/", htmlRouter);
 app.use("/api/v1/auth/", authRouter);
@@ -47,5 +54,13 @@ app.use("/api/v1/offer/", offerRouter);
 app.use("/api/v1/banner/", bannerRouter);
 app.use("/api/v1/category/", categoryRouter);
 
+
+
+app.use((req, res, next) => {
+
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+app.use(globalErrorController)
 
 module.exports = app;

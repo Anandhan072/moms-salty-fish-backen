@@ -22,7 +22,7 @@ const signAccessToken = (userId, deviceId) =>
 const cookieOptions = (days) => ({
   expires: new Date(Date.now() + days * 24 * 60 * 60 * 1000),
   httpOnly: true,
-  secure: true, // must be true if SameSite=None
+  secure: false,
   sameSite: "None", // required for cross-origin cookies
 });
 
@@ -65,7 +65,7 @@ const createSendTokens = async (user, statusCode, res, deviceId) => {
    📩 Request OTP
 ================================================================= */
 exports.requestOtp = catchAsync(async (req, res, next) => {
-  const { email, phoneNumber } = req.body;
+  const { email, phoneNumber } = req.body || {};
   if (!email && !phoneNumber) return next(new AppError("Email or phone number required", 400));
 
   let user = await User.findOne({ $or: [{ email }, { phoneNumber }] });
@@ -106,7 +106,9 @@ exports.verifyOtp = catchAsync(async (req, res, next) => {
    ♻️ Refresh Access Token
 ================================================================= */
 exports.refreshToken = catchAsync(async (req, res, next) => {
-  console.log("Refreshing token...");
+
+  console.log(req.cookies)
+ 
   const rawToken =
     req.cookies?.refreshToken ||
     (req.headers.authorization?.startsWith("Bearer") && req.headers.authorization.split(" ")[1]);
@@ -179,7 +181,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.split(" ")[1];
 
 
-  console.log('kjbijbihbiu')
+console.log("cockeis:", req.cookies)
 
   const deviceId = req.headers["device-id"] || req.headers["x-device-id"];
   if (!token && req.cookies?.jwt) token = req.cookies.jwt;

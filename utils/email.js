@@ -1,5 +1,7 @@
 const axios = require("axios");
 
+
+const AppError = require('./appError')
 let zohoAccessToken = null; // Cached access token
 let tokenGeneratedAt = null; // Token timestamp
 const TOKEN_VALIDITY_MS = 59 * 60 * 1000; // 59 minutes
@@ -85,11 +87,19 @@ Mom's Salty Fish Support Team
       data: response.data,
     };
   } catch (err) {
-    console.error("❌ Error in zohoMail:", {
-      status: err.response?.status,
-      data: err.response?.data,
-      message: err.message,
-    });
-    throw err;
+    // ✅ CENTRALIZED ERROR MAPPING
+    if (err.response) {
+      throw new AppError(
+        `Zoho API Error: ${err.response.data?.message || "Email failed"}`,
+        err.response.status
+      );
+    }
+
+    if (err.request) {
+      throw new AppError("Zoho Mail service unreachable", 503);
+    }
+
+    throw new AppError(err.message || "Zoho mail failed", 500);
   }
 };
+
